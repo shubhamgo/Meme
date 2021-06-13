@@ -18,7 +18,7 @@ data "aws_ami" "ubuntu" {
 // frontend ec2
 
  resource "aws_instance" "front_end" {
-  ami           = "${data.aws_ami.amazon_linux_2.id}"
+  ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "${var.instance_type}"
   key_name      = "Application.pem"
   associate_public_ip_address = true
@@ -31,7 +31,7 @@ data "aws_ami" "ubuntu" {
 
   iam_instance_profile = "${var.iam_instance_profile_id}-news_host"
 
-  availability_zone = "${var.region}"
+
 
   subnet_id = "${var.subnet_public1_id}"
 
@@ -60,7 +60,7 @@ data "aws_ami" "ubuntu" {
 // quotes application
 
 resource "aws_instance" "quotes" {
-  ami           = "${data.aws_ami.amazon_linux_2.id}"
+  ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "${var.instance_type}"
   key_name      = "Application.pem"
   associate_public_ip_address = true
@@ -73,7 +73,6 @@ resource "aws_instance" "quotes" {
 
   iam_instance_profile = "${var.iam_instance_profile_id}-news_host"
 
-  availability_zone = "${var.region}a"
 
   subnet_id = "${var.subnet_public1_id}"
 
@@ -101,7 +100,7 @@ resource "aws_instance" "quotes" {
 // news-feed
 
 resource "aws_instance" "newsfeed" {
-  ami           = "${data.aws_ami.amazon_linux_2.id}"
+  ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "${var.instance_type}"
   key_name      = "Application.pem"
   associate_public_ip_address = true
@@ -114,7 +113,6 @@ resource "aws_instance" "newsfeed" {
 
   iam_instance_profile = "${var.iam_instance_profile_id}-news_host"
 
-  availability_zone = "${var.region}a"
 
   subnet_id = "${var.subnet_public1_id}"
 
