@@ -33,7 +33,7 @@ data "aws_ami" "ubuntu" {
 
 
 
-  subnet_id = "${var.subnet_public1_id}"
+  subnet_id = "${var.frontend_security_group_id}"
 
   vpc_security_group_ids = [
     "${var.security_group}"
@@ -75,7 +75,7 @@ resource "aws_instance" "quotes" {
   iam_instance_profile = "${var.iam_instance_profile_id}"
 
 
-  subnet_id = "${var.subnet_public1_id}"
+  subnet_id = "${var.quotes_security_group_id}"
 
   vpc_security_group_ids = [
    "${var.security_group}"
@@ -116,7 +116,7 @@ resource "aws_instance" "newsfeed" {
   iam_instance_profile = "${var.iam_instance_profile_id}"
 
 
-  subnet_id = "${var.subnet_public1_id}"
+  subnet_id = "${var.newsfeed_security_group_id}"
 
   vpc_security_group_ids = [
     "${var.security_group}"

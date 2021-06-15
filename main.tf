@@ -33,6 +33,9 @@ module "ec2" {
     iam_instance_profile_id ="${module.role.iam_instance_profile_id}"
     security_group = "${module.securitygroup.security_group_id}"
     instance_type ="${var.instance_type}"
+     frontend_security_group_id = "${module.securitygroup.frontend_security_group_id}"
+      newsfeed_security_group_id ="${module.securitygroup.newsfeed_security_group_id}"
+      quotes_security_group_id ="${module.securitygroup.quotes_security_group_id}"
 }
 
 module "elb" {
