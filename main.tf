@@ -17,8 +17,10 @@ module "policies" {
 }
 module "role" {
     source = "./modules/IAM/Roles/"
-      application_name ="${var.application_name}"
+    application_name ="${var.application_name}"
     iam_instance_profile_role_name ="${var.iam_instance_profile_role_name}"
+    ECR_RW_policy_arn = "${module.policies.ECR_RW_policy_arn}"
+    
 }
 module "securitygroup" {
     source = "./modules/IAM/SecurityGroup/"

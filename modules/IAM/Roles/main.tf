@@ -15,7 +15,7 @@ resource "aws_iam_role" "ec2_role" {
             "Effect": "Allow",
             "Principal": {
                "Service": "ec2.amazonaws.com"
-            },
+               },
              "Action": "sts:AssumeRole"
            
             
@@ -36,3 +36,7 @@ resource "aws_iam_instance_profile" "test_profile" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "attching_ecr_policy" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn ="${var.ECR_RW_policy_arn}"
+}

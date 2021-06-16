@@ -79,7 +79,7 @@ resource "aws_security_group" "newsfeed" {
     from_port        = 8081
     to_port          = 8081
     protocol         = "tcp"
-    cidr_blocks      = "${aws_security_group.frontend.id}"
+    security_groups      = ["${aws_security_group.frontend.id}"]
     
   }
   egress {
@@ -109,7 +109,7 @@ resource "aws_security_group" "quotes" {
     from_port        = 8081
     to_port          = 8081
     protocol         = "tcp"
-    cidr_blocks      = "${aws_security_group.newsfeed.id}"
+    security_groups      = ["${aws_security_group.newsfeed.id}"]
     
   }
   egress {

@@ -33,17 +33,39 @@ data "aws_ami" "ubuntu" {
 
 
 
-  subnet_id = "${var.frontend_security_group_id}"
+  subnet_id = "${var.subnet_public1_id}"
 
   vpc_security_group_ids = [
-    "${var.security_group}"
+    "${var.frontend_security_group_id}"
   ]
-
+    user_data = <<-EOF
+              #!/bin/bash
+              lsb_release -a
+              lscpu
+              uname -m
+              apt install unzip -y
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+               sudo ./aws/install
+               /usr/local/bin/aws --version
+               sudo apt-get remove docker docker-engine docker.io containerd runc
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+              echo   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+              sudo apt-get update
+              sudo apt-get install docker-ce docker-ce-cli -y
+              sudo groupadd docker
+              sudo gpasswd -a $USER docker
+              aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-frontend
+              docker pull  976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-frontend:frontend.latest
+              docker run -it 976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-frontend:frontend.latest -p 8080:8080
+              EOF
+  
   tags = {
     Name = "${var.application_name}-frontend"
     createdBy = "infra-${var.iam_instance_profile_id}/news"
   }
-
+/*
   connection {
     host = "${self.public_ip}"
     type = "ssh"
@@ -54,7 +76,7 @@ data "aws_ami" "ubuntu" {
 
   provisioner "remote-exec" {
     script = "${path.module}/provision-docker.sh"
-  }
+  }*/
 }
 
 
@@ -75,17 +97,39 @@ resource "aws_instance" "quotes" {
   iam_instance_profile = "${var.iam_instance_profile_id}"
 
 
-  subnet_id = "${var.quotes_security_group_id}"
+  subnet_id = "${var.subnet_public1_id}"
 
   vpc_security_group_ids = [
-   "${var.security_group}"
+   "${var.quotes_security_group_id}"
   ]
+  user_data = <<-EOF
+              #!/bin/bash
+              lsb_release -a
+              lscpu
+              uname -m
+              apt install unzip -y
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+               sudo ./aws/install
+               /usr/local/bin/aws --version
+               sudo apt-get remove docker docker-engine docker.io containerd runc
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+              echo   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+              sudo apt-get update
+              sudo apt-get install docker-ce docker-ce-cli -y
+              sudo groupadd docker
+              sudo gpasswd -a $USER docker
+              aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-quotes
+              docker pull 976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-quotes:quotes.latest
+              docker run -it 976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-quotes:quotes.latest -p 8082:8082
+              EOF
 
   tags = {
     Name = "${var.application_name}-quotes"
     createdBy = "infra-${var.iam_instance_profile_id}/news"
   }
-
+/*
   connection {
     host = "${self.public_ip}"
     type = "ssh"
@@ -96,7 +140,7 @@ resource "aws_instance" "quotes" {
 
   provisioner "remote-exec" {
     script = "${path.module}/provision-docker.sh"
-  }
+  } */
 }
 
 // news-feed
@@ -116,17 +160,38 @@ resource "aws_instance" "newsfeed" {
   iam_instance_profile = "${var.iam_instance_profile_id}"
 
 
-  subnet_id = "${var.newsfeed_security_group_id}"
+  subnet_id = "${var.subnet_public1_id}"
 
   vpc_security_group_ids = [
-    "${var.security_group}"
+    "${var.newsfeed_security_group_id}"
   ]
-
+user_data = <<-EOF
+              #!/bin/bash
+              lsb_release -a
+              lscpu
+              uname -m
+              apt install unzip -y
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+               sudo ./aws/install
+               /usr/local/bin/aws --version
+               sudo apt-get remove docker docker-engine docker.io containerd runc
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+              echo   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+              sudo apt-get update
+               sudo apt-get install docker-ce docker-ce-cli -y
+               sudo groupadd docker
+              sudo gpasswd -a $USER docker
+              aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-newsfeed
+              docker pull  976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-newsfeed:newsfeed.latest
+              docker run -it 976108646567.dkr.ecr.eu-central-1.amazonaws.com/tw-repo-newsfeed:newsfeed.latest -p 8081:8081
+              EOF
   tags = {
   Name = "${var.application_name}-newsfeed"
     createdBy = "infra-${var.iam_instance_profile_id}/news"
   }
-
+/*
   connection {
     host = "${self.public_ip}"
     type = "ssh"
@@ -137,7 +202,7 @@ resource "aws_instance" "newsfeed" {
 
   provisioner "remote-exec" {
     script = "${path.module}/provision-docker.sh"
-  }
+  } */
 }
 
 
